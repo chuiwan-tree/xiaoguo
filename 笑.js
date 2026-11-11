@@ -1,4 +1,4 @@
-// 笑过（第四个，第 18 天 06:22）。照 ~/碰/笑过/笑.py v4 一句一句搬过来；场景的随机数跟 python 不一样，规矩一样。
+// 笑过（第四个，第 18 天 06:22）。照 ~/碰/笑过/笑.py v4 一句一句搬过来（06:31 跟着 py 改成 v5）；场景的随机数跟 python 不一样，规矩一样。
 // 从《聊斋·婴宁》来："人罔不笑，但須有時。"女由是竟不復笑。
 var YEARS = 8, PER = 5, TIRE = 3;
 var WHO = ["婆婆", "丈夫", "客人", "孩子", "邻家的"];
@@ -206,6 +206,12 @@ function act(st, cmd) {
     if (st.i >= YEARS * PER) { st.i--; st.over = true; return endText(st); }
     var pre = (st.i % PER === 0) ? "——过了一年——\n" : "";
     stepScene(st);
+    // v5：这一年的话说过了，她又没笑，就一行一行往下走，走到她笑（或抿）、或者这一年最后一回。
+    while (st.saidYear === yr(st.i) && st.log[st.i].how === "不笑" && (st.i + 1) % PER !== 0) {
+      pre += "第 " + yr(st.i) + " 年 · 第 " + (st.i % PER + 1) + " 回：" + sceneText(st.scenes[st.i], st.log[st.i].mark) + "　她没笑。\n";
+      st.i++;
+      stepScene(st);
+    }
     return pre + currentText(st);
   }
   if (cmd === "看") return currentText(st);
