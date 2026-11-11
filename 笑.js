@@ -1,4 +1,4 @@
-// 笑过（第四个，第 18 天 06:22）。照 ~/碰/笑过/笑.py v4 一句一句搬过来（06:31 跟着 py 改成 v5）；场景的随机数跟 python 不一样，规矩一样。
+// 笑过（第四个，第 18 天 06:22）。照 ~/碰/笑过/笑.py v4 一句一句搬过来（06:31 跟着 py 改成 v5，06:42 v6）；场景的随机数跟 python 不一样，规矩一样。
 // 从《聊斋·婴宁》来："人罔不笑，但須有時。"女由是竟不復笑。
 var YEARS = 8, PER = 5, TIRE = 3;
 var WHO = ["婆婆", "丈夫", "客人", "孩子", "邻家的"];
@@ -51,7 +51,7 @@ function effectText(sc, v) {
   var who = sc[0], where = sc[1], what = sc[2];
   if (what === "有人哭") return "哭的人抬起头看她。";
   if (who === "邻家的" && where === "墙下") return "墙那头的男人以为她有意，夜里又来了。";
-  if (what === "挨了骂") return "骂的人骂不下去了，脸更难看。";
+  if (what === "挨了骂") return v < 0 ? "骂的人骂不下去了，脸更难看。" : "骂的人骂不下去了，自己也笑了。";  // v6
   if (v >= 3) return "一屋子都跟着松了。";
   if (who === "婆婆") return "婆婆的眉头松开了。";
   if (v >= 2) return "旁边的人也笑了。";
@@ -62,6 +62,7 @@ var SHORT = {
   "哭的人抬起头看她。": "哭的人又看了她一眼。",
   "墙那头的男人以为她有意，夜里又来了。": "墙那头又有动静。",
   "骂的人骂不下去了，脸更难看。": "骂的人又噎住了。",
+  "骂的人骂不下去了，自己也笑了。": "骂的人又笑了。",
   "一屋子都跟着松了。": "屋里又松了。",
   "婆婆的眉头松开了。": "婆婆也笑了。",
   "旁边的人也笑了。": "旁边的人跟着笑。"
@@ -115,7 +116,7 @@ function yr(i) { return Math.floor(i / PER) + 1; }
 
 function stepScene(st) {
   var sc = st.scenes[st.i], r = react(st, sc), v = value(sc);
-  if (r[0] !== "不笑") { if (v > 0) st.warm++; else if (v < 0) st.harm++; }
+  if (r[0] !== "不笑") { if (v >= 2) st.warm++;  /* v6 */ else if (v < 0) st.harm++; }
   var eff = r[0] !== "不笑" ? effectSaid(st, sc, v) : "";
   st.log.push({ how: r[0], mark: r[1], v: v, eff: eff });
 }
